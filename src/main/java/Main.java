@@ -254,7 +254,7 @@ public class Main {
                     System.out.print("请输入学生ID：");
                     int stuId4 = input.nextInt();
                     input.nextLine();
-                    AdmissionResult result = admissionResultService.getAdmissionResultByStudent(stuId4);
+                    AdmissionResult result = admissionResultService.getResultByStudent(stuId4);
                     if (result == null) {
                         System.out.println("尚未被录取。");
                     } else {
@@ -267,7 +267,7 @@ public class Main {
                     System.out.print("请输入学校ID：");
                     int uniId = input.nextInt();
                     input.nextLine();
-                    List<AdmissionResult> results = admissionResultService.getAdmissionResultsByUniversity(uniId);
+                    List<AdmissionResult> results = admissionResultService.getResultsByUniversity(uniId);
                     if (results.isEmpty()) {
                         System.out.println("该学校暂无录取学生。");
                     } else {

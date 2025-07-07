@@ -7,4 +7,5 @@ import java.util.List;
 public interface ApplicationDao {
     void addApplication(Application app);
     List<Application> getApplicationsByStudent(int studentId);
+    List<Application> getAllApplications();
 }

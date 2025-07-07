@@ -57,4 +57,29 @@ public class ApplicationDaoImpl implements ApplicationDao {
         }
         return list;
     }
+
+    @Override
+    public List<Application> getAllApplications() {
+        List<Application> list = new ArrayList<>();
+        String sql = "SELECT * FROM application ORDER BY student_id, priority";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()) {
+                Application app = new Application();
+                app.setId(rs.getInt("id"));
+                app.setStudentId(rs.getInt("student_id"));
+                app.setUniversityId(rs.getInt("university_id"));
+                app.setFirstMajorId(rs.getInt("first_major_id"));
+                app.setSecondMajorId(rs.getInt("second_major_id"));
+                app.setThirdMajorId(rs.getInt("third_major_id"));
+                app.setAllowAdjustment(rs.getBoolean("allow_adjustment"));
+                app.setPriority(rs.getInt("priority"));
+                list.add(app);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }
