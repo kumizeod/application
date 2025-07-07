@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ApplicationDaoImpl implements ApplicationDao {
+
     @Override
     public void addApplication(Application app) {
         String sql = "INSERT INTO application (student_id, university_id, first_major_id, second_major_id, third_major_id, allow_adjustment, priority) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -19,9 +20,22 @@ public class ApplicationDaoImpl implements ApplicationDao {
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, app.getStudentId());
             ps.setInt(2, app.getUniversityId());
-            ps.setInt(3, app.getFirstMajorId());
-            ps.setInt(4, app.getSecondMajorId());
-            ps.setInt(5, app.getThirdMajorId());
+
+            if (app.getFirstMajorId() != null) {
+                ps.setInt(3, app.getFirstMajorId());
+            } else {
+                ps.setNull(3, java.sql.Types.INTEGER);
+            }
+            if (app.getSecondMajorId() != null) {
+                ps.setInt(4, app.getSecondMajorId());
+            } else {
+                ps.setNull(4, java.sql.Types.INTEGER);
+            }
+            if (app.getThirdMajorId() != null) {
+                ps.setInt(5, app.getThirdMajorId());
+            } else {
+                ps.setNull(5, java.sql.Types.INTEGER);
+            }
             ps.setBoolean(6, app.getAllowAdjustment());
             ps.setInt(7, app.getPriority());
             ps.executeUpdate();
