@@ -17,31 +17,61 @@ public class Main {
 
         while (true) {
             System.out.println("===== 高考志愿管理系统 =====");
-            System.out.println("1. 学生志愿填报");
-            System.out.println("2. 查询学生志愿");
-            System.out.println("3. 自动分配录取结果");
-            System.out.println("4. 查询学生录取结果");
-            System.out.println("5. 查询学校已录取学生");
-            System.out.println("0. 退出系统");
+            System.out.println("1. 学生端");
+            System.out.println("2. 学校端");
+            System.out.println("3. 系统端");
+            System.out.println("0. 退出");
             System.out.print("请选择：");
-            int choice = input.nextInt();
+            int mainChoice = input.nextInt();
             input.nextLine();
 
-            switch (choice) {
-                case 1: // 学生志愿填报
-                    System.out.print("请输入学生ID：");
-                    int studentId = input.nextInt();
-                    input.nextLine();
-                    Student student = studentService.getStudentById(studentId);
-                    if (student == null) {
-                        System.out.println("学生不存在！");
-                        break;
-                    }
+            switch (mainChoice) {
+                case 1: // 学生端
+                    studentMenu(input, studentService, universityService, majorService, applicationService, admissionResultService);
+                    break;
+                case 2: // 学校端
+                    schoolMenu(input, universityService, admissionResultService);
+                    break;
+                case 3: // 系统端
+                    systemMenu(input, admissionResultService);
+                    break;
+                case 0:
+                    System.out.println("已退出。");
+                    return;
+                default:
+                    System.out.println("无效操作！");
+            }
+        }
+    }
+
+    private static void studentMenu(Scanner input, StudentService studentService,
+                                    UniversityService universityService, MajorService majorService,
+                                    ApplicationService applicationService, AdmissionResultService admissionResultService) {
+        System.out.print("请输入学生ID：");
+        int studentId = input.nextInt();
+        input.nextLine();
+        Student student = studentService.getStudentById(studentId);
+        if (student == null) {
+            System.out.println("学生不存在！");
+            return;
+        }
+        while (true) {
+            System.out.println("===== 学生端 =====");
+            System.out.println("1. 填报志愿");
+            System.out.println("2. 查询志愿");
+            System.out.println("3. 查询录取结果");
+            System.out.println("0. 返回主菜单");
+            System.out.print("请选择：");
+            int stuChoice = input.nextInt();
+            input.nextLine();
+
+            switch (stuChoice) {
+                case 1:
+                    // 填报志愿（和你的原代码一致，略）
                     System.out.print("是否同意专业调剂(yes/no)：");
                     String adjustStr = input.nextLine();
                     boolean allowAdjustment = "yes".equalsIgnoreCase(adjustStr);
 
-                    List<Application> applications = new ArrayList<>();
                     for (int i = 1; i <= 10; i++) {
                         System.out.println("第" + i + "志愿：");
                         System.out.print("学校ID(0结束)：");
@@ -78,12 +108,9 @@ public class Main {
                     }
                     System.out.println("志愿填报完成！");
                     break;
-
-                case 2: // 查询学生志愿
-                    System.out.print("请输入学生ID：");
-                    int stuId = input.nextInt();
-                    input.nextLine();
-                    List<Application> apps = applicationService.getApplicationsByStudent(stuId);
+                case 2:
+                    // 查询志愿
+                    List<Application> apps = applicationService.getApplicationsByStudent(studentId);
                     if (apps.isEmpty()) {
                         System.out.println("该学生未填报志愿。");
                     } else {
@@ -96,18 +123,9 @@ public class Main {
                         }
                     }
                     break;
-
-                case 3: // 自动分配录取（模拟一轮录取）
-                    System.out.println("正在模拟录取分配...");
-                    admissionResultService.allocateAdmission(); // 假设有该方法
-                    System.out.println("录取分配完成！");
-                    break;
-
-                case 4: // 查询学生录取结果
-                    System.out.print("请输入学生ID：");
-                    int stuId4 = input.nextInt();
-                    input.nextLine();
-                    AdmissionResult result = admissionResultService.getResultByStudent(stuId4);
+                case 3:
+                    // 查询录取结果
+                    AdmissionResult result = admissionResultService.getResultByStudent(studentId);
                     if (result == null) {
                         System.out.println("尚未被录取。");
                     } else {
@@ -115,11 +133,33 @@ public class Main {
                                 "，专业ID：" + result.getMajorId());
                     }
                     break;
+                case 0:
+                    return;
+                default:
+                    System.out.println("无效操作！");
+            }
+        }
+    }
 
-                case 5: // 查询学校已录取学生
-                    System.out.print("请输入学校ID：");
-                    int uniId = input.nextInt();
-                    input.nextLine();
+    private static void schoolMenu(Scanner input, UniversityService universityService, AdmissionResultService admissionResultService) {
+        System.out.print("请输入学校ID：");
+        int uniId = input.nextInt();
+        input.nextLine();
+        University university = universityService.getUniversityById(uniId);
+        if (university == null) {
+            System.out.println("学校不存在！");
+            return;
+        }
+        while (true) {
+            System.out.println("===== 学校端 =====");
+            System.out.println("1. 查询已录取学生");
+            System.out.println("0. 返回主菜单");
+            System.out.print("请选择：");
+            int schChoice = input.nextInt();
+            input.nextLine();
+
+            switch (schChoice) {
+                case 1:
                     List<AdmissionResult> results = admissionResultService.getResultsByUniversity(uniId);
                     if (results.isEmpty()) {
                         System.out.println("该学校暂无录取学生。");
@@ -129,14 +169,34 @@ public class Main {
                         }
                     }
                     break;
-
                 case 0:
-                    System.out.println("已退出。");
                     return;
                 default:
                     System.out.println("无效操作！");
             }
-            System.out.println();
+        }
+    }
+
+    private static void systemMenu(Scanner input, AdmissionResultService admissionResultService) {
+        while (true) {
+            System.out.println("===== 系统端 =====");
+            System.out.println("1. 自动分配录取结果");
+            System.out.println("0. 返回主菜单");
+            System.out.print("请选择：");
+            int sysChoice = input.nextInt();
+            input.nextLine();
+
+            switch (sysChoice) {
+                case 1:
+                    System.out.println("正在模拟录取分配...");
+                    admissionResultService.allocateAdmission();
+                    System.out.println("录取分配完成！");
+                    break;
+                case 0:
+                    return;
+                default:
+                    System.out.println("无效操作！");
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 package service;
 
 import dao.ApplicationDao;
+import dao.factory.DaoFactory;
 import dao.impl.ApplicationDaoImpl;
 import model.Application;
 
@@ -10,7 +11,8 @@ import java.util.List;
 import java.util.Set;
 
 public class ApplicationService {
-    private final ApplicationDao applicationDao = new ApplicationDaoImpl();
+    //private final ApplicationDao applicationDao = new ApplicationDaoImpl();
+    private final ApplicationDao applicationDao = DaoFactory.createApplicationDao();
 
     public void addApplication(Application application) {
         applicationDao.addApplication(application);

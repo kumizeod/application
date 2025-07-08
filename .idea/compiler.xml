@@ -9,5 +9,8 @@
         <module name="volunteer_application_system" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="college_admission" target="11" />
+    </bytecodeTargetLevel>
   </component>
 </project>

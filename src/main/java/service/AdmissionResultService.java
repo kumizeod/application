@@ -1,6 +1,7 @@
 package service;
 
 import dao.AdmissionResultDao;
+import dao.factory.DaoFactory;
 import dao.impl.AdmissionResultDaoImpl;
 import model.AdmissionResult;
 import model.Application;
@@ -9,7 +10,8 @@ import service.ApplicationService;
 import java.util.List;
 
 public class AdmissionResultService {
-    private final AdmissionResultDao admissionResultDao = new AdmissionResultDaoImpl();
+    //private final AdmissionResultDao admissionResultDao = new AdmissionResultDaoImpl();
+    private final AdmissionResultDao admissionResultDao = DaoFactory.createAdmissionResultDao();
 
     // 可注入或直接 new，视你的项目结构
     private final ApplicationService applicationService = new ApplicationService();
